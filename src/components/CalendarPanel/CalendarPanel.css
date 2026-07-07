@@ -1,0 +1,91 @@
+.calendar-panel {
+  display: flex;
+  justify-content: center;
+}
+
+.calendar-panel__card {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  width: 100%;
+  max-width: 480px;
+  border: 1px solid rgba(201, 169, 92, 0.15);
+  box-shadow: var(--shadow-elevated);
+}
+
+/* Month Navigator */
+.month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-lg);
+}
+
+.month-nav__btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 169, 92, 0.3);
+  background: transparent;
+  color: var(--color-accent-gold);
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.month-nav__btn:hover {
+  background: var(--color-accent-gold);
+  color: var(--color-bg-primary);
+  border-color: var(--color-accent-gold);
+}
+
+.month-nav__label {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: 0.05em;
+}
+
+/* Weekday Header */
+.weekday-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: var(--space-sm);
+}
+
+.weekday-header__cell {
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  padding: var(--space-xs) 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Calendar Grid */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+@media (max-width: 768px) {
+  .calendar-panel__card {
+    padding: var(--space-md);
+    max-width: 100%;
+  }
+
+  .month-nav__label {
+    font-size: 1.05rem;
+  }
+
+  .calendar-day {
+    font-size: 0.85rem;
+  }
+}

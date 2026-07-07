@@ -1,0 +1,41 @@
+:root {
+  /* Background */
+  --color-bg-primary: #1a1a2e;
+  --color-bg-secondary: #16213e;
+  --color-bg-tertiary: #0f3460;
+
+  /* Text */
+  --color-text-primary: #f5f0e8;
+  --color-text-secondary: #c4b998;
+  --color-text-muted: #8a8070;
+
+  /* Accent */
+  --color-accent-gold: #c9a95c;
+  --color-accent-gold-light: #dfc98a;
+  --color-accent-gold-dark: #a8883a;
+
+  /* Functional */
+  --color-success: #5c8a5c;
+  --color-error: #c95c5c;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-xxl: 3rem;
+
+  /* Typography */
+  --font-heading: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
+  --font-body: 'Lato', 'Segoe UI', 'Arial', sans-serif;
+
+  /* Border radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+
+  /* Shadows */
+  --shadow-elevated: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-gold-glow: 0 0 15px rgba(201, 169, 92, 0.3);
+}

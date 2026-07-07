@@ -1,35 +1,103 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useMemo, useCallback, useEffect } from 'react';
+import { musicPieces } from './data/musicData';
+import { useAudioPlayer } from './hooks/useAudioPlayer';
+import { getDayPiece } from './utils/calendar';
+import Header from './components/Header/Header';
+import MainLayout from './components/MainLayout/MainLayout';
+import StoryPanel from './components/StoryPanel/StoryPanel';
+import CalendarPanel from './components/CalendarPanel/CalendarPanel';
+import AudioPlayer from './components/AudioPlayer/AudioPlayer';
+import type { MusicPiece } from './types/music';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const today = new Date();
+  const todayDay = today.getDate();
+  const todayYear = today.getFullYear();
+  const todayMonth = today.getMonth();
+
+  const [currentYear, setCurrentYear] = useState(todayYear);
+  const [currentMonth, setCurrentMonth] = useState(todayMonth);
+  const [selectedDay, setSelectedDay] = useState<number | null>(todayDay);
+
+  const audio = useAudioPlayer();
+
+  // Build day-to-piece map (31 days, each mapped to a unique piece via modulo)
+  const dayPieceMap = useMemo(() => {
+    const map = new Map<number, MusicPiece>();
+    for (let d = 1; d <= 31; d++) {
+      const piece = getDayPiece(d, musicPieces);
+      if (piece) map.set(d, piece);
+    }
+    return map;
+  }, []);
+
+  // Derive selected piece from selectedDay
+  const selectedPiece = useMemo(
+    () => (selectedDay ? (dayPieceMap.get(selectedDay) ?? null) : null),
+    [selectedDay, dayPieceMap]
+  );
+
+  // When selectedPiece changes, load and auto-play
+  useEffect(() => {
+    if (selectedPiece) {
+      audio.load(selectedPiece.audioUrl);
+      const timer = setTimeout(() => audio.play(), 300);
+      return () => clearTimeout(timer);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedPiece]);
+
+  const handleSelectDay = useCallback((day: number) => {
+    setSelectedDay(day);
+  }, []);
+
+  const handlePrevMonth = useCallback(() => {
+    if (currentMonth === 0) {
+      setCurrentMonth(11);
+      setCurrentYear((y) => y - 1);
+    } else {
+      setCurrentMonth((m) => m - 1);
+    }
+  }, [currentMonth]);
+
+  const handleNextMonth = useCallback(() => {
+    if (currentMonth === 11) {
+      setCurrentMonth(0);
+      setCurrentYear((y) => y + 1);
+    } else {
+      setCurrentMonth((m) => m + 1);
+    }
+  }, [currentMonth]);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="app">
+      <Header />
+      <MainLayout>
+        <StoryPanel piece={selectedPiece} />
+        <CalendarPanel
+          year={currentYear}
+          month={currentMonth}
+          selectedDay={selectedDay}
+          todayDay={todayDay}
+          pieces={dayPieceMap}
+          onSelectDay={handleSelectDay}
+          onPrevMonth={handlePrevMonth}
+          onNextMonth={handleNextMonth}
+        />
+      </MainLayout>
+      <AudioPlayer
+        piece={selectedPiece}
+        isPlaying={audio.isPlaying}
+        playState={audio.playState}
+        currentTime={audio.currentTime}
+        duration={audio.duration}
+        error={audio.error}
+        onToggle={audio.toggle}
+        onStop={audio.stop}
+      />
+    </div>
+  );
 }
 
-export default App
+export default App;
